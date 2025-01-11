@@ -46,23 +46,32 @@ public class RegistrationForm extends JDialog{
         String password = String.valueOf(pfPassword.getPassword());
         String confirmPassword = String.valueOf(pfConfirmPassword.getPassword());
 
-        if(name.isEmpty() || email.isEmpty() || phone.isEmpty() || address.isEmpty() || password.isEmpty()) {
+        if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || address.isEmpty() || password.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     "Unesite sve podatke", "Pokusajte ponovo",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        if(!password.equals(confirmPassword)) {
+        if (!password.equals(confirmPassword)) {
             JOptionPane.showMessageDialog(this, "Vas lozinka se nepodudara",
-                    "try again", JOptionPane.ERROR_MESSAGE);
+                    "Pokusajte ponovo", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         user = addUserToDatabase(name, email, phone, address, password);
-        if(user != null) {
+        if (user != null) {
+            JOptionPane.showMessageDialog(this,
+                    "Uspješna registracija! Korisnik, " + user.getName() + " dodan",
+                    "Registracija uspješna", JOptionPane.INFORMATION_MESSAGE);
             dispose();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Registracija nije uspjela. Pokušajte ponovo.",
+                    "Registracija neuspješna", JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     public User user;
     private User addUserToDatabase(String name, String email, String phone, String address, String password) {
@@ -95,7 +104,7 @@ public class RegistrationForm extends JDialog{
 
                 if (rs.next()) {
                     // Kreiraj User objekat
-                    boolean isAdminBoolean = rs.getBoolean("isAdmin"); // Ovdje uzimamo boolean vrednost
+                    boolean isAdminBoolean = rs.getBoolean("isAdmin"); //dohvatanje boolean vrijednosti
                     int isAdminInt = isAdminBoolean ? 1 : 0;  // Mapiraj boolean na int (1 ili 0)
 
                     user = new User(

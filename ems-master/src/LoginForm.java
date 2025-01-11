@@ -11,13 +11,13 @@ public class LoginForm extends JDialog {
     private JButton btnCancel;
     private JPanel loginPanel;
 
-    public User user; // Trenutno prijavljeni korisnik
+    public User user;
 
-    public void logout() {
-        user = null; // Resetuj korisnika
-        tfEmail.setText("");  // Očisti polje za email
-        pfPassword.setText(""); // Očisti polje za lozinku
-    }
+//    public void logout() {
+//        user = null;
+//        tfEmail.setText("");  // Očisti polje za email
+//        pfPassword.setText(""); // Očisti polje za lozinku
+//    }
 
     public LoginForm(JFrame parent) {
         super(parent);
@@ -28,7 +28,6 @@ public class LoginForm extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        // Akcija za dugme "OK"
         btnOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -38,11 +37,11 @@ public class LoginForm extends JDialog {
                 user = authenticateUser(email, password);
 
                 if (user != null) {
-                    dispose(); // Zatvori LoginForm nakon uspešne autentifikacije
+                    dispose(); // zatvaranje forme nakon uspjesne prijave
 
-                    // Ako je korisnik menadžer (isAdmin == 1), otvori ManagerForm
+
                     if (user.getIsAdmin() == 3) { // Ako je menadžer
-                        Manager managerForm = new Manager();  // Pokrećemo formu za menadžera
+                        Manager managerForm = new Manager();
                         managerForm.setVisible(true);
                     }
                 } else {
@@ -51,18 +50,18 @@ public class LoginForm extends JDialog {
             }
         });
 
-        // Akcija za dugme "Cancel"
+
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose(); // Zatvara login formu
+                dispose();
             }
         });
 
         setVisible(true);
     }
 
-    // Autentifikacija korisnika na osnovu email-a i password-a
+    // Autentifikacija korisnika na osnovu emaila i pass
     private User authenticateUser(String email, String password) {
         User user = null;
         final String DB_URL = "jdbc:mysql://localhost:3306/managment?serverTimeZone=UTC";
@@ -99,7 +98,7 @@ public class LoginForm extends JDialog {
     }
 
 
-    // Testiranje LoginForm-a
+    // Testiranje
     public static void main(String[] args) {
         LoginForm loginForm = new LoginForm(null);
         User user = loginForm.user;

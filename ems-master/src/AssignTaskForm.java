@@ -82,7 +82,7 @@ public class AssignTaskForm extends JDialog {
 
             stmt.setInt(1, userId);
             stmt.setString(2, taskDescription);
-            stmt.setString(3, "Zadatak"); // Dodavanje vrijednosti za 'name' kako bi se izbjegla SQL greška
+            stmt.setString(3, "Zadatak");
 
             int rowsInserted = stmt.executeUpdate();
             if (rowsInserted > 0) {

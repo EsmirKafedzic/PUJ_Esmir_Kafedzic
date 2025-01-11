@@ -21,18 +21,18 @@ public class DashboardForm extends JFrame {
     private JLabel srLabelTask;
 
 
-    private User user; // Globalna varijabla user
+    private User user;
 
     public DashboardForm() {
         setTitle("Dashboard");
         setContentPane(dashboardPanel);
         setMinimumSize(new Dimension(500, 429));
-        setSize(900, 600);
+        setSize(1000, 600);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        boolean hasRegisteredUsers = connectToDatabase();  // Provjerite ako postoje korisnici u bazi
+        boolean hasRegisteredUsers = connectToDatabase();
 
-        // Ako postoje registrovani korisnici, pozivamo LoginForm
+        // Ako postoje registrovani korisnici, poziva sele logiforma
         if (hasRegisteredUsers) {
 
             LoginForm loginForm = new LoginForm(this);
@@ -41,50 +41,47 @@ public class DashboardForm extends JFrame {
             if (user != null) {
                 lbAdmin.setText("User: " + user.name);
 
-                // Provjera da li je korisnik admin ili super admin
+                // provjera koji korisnik se loguje
                 if (user.getIsAdmin() == 3) {
-                    setManagerPrivileges(); // Privilegije za Manager korisnika
+                    setManagerPrivileges();
                 }else if (user.getIsAdmin() == 2) {
-                    setSuperAdminPrivileges();  // Superadmin privilegije
+                    setSuperAdminPrivileges();
                 } else if (user.getIsAdmin() == 1) {
                     System.out.println("Login uspjesan !!");
-                    setAdminPrivileges();  // Admin privilegije
-                } else {
-                    setUserPrivileges();  // Obični korisnik privilegije
-                }
-
-
-                setLocationRelativeTo(null);
-                setVisible(true);
-            } else {
-                dispose();  // Ako nije prijavljen korisnik, zatvori DashboardForm
-            }
-        } else {
-            // Ako nema registrovanih korisnika, pozivamo RegistrationForm
-            RegistrationForm registrationForm = new RegistrationForm(this);
-            user = registrationForm.user;
-
-            if (user != null) {
-                lbAdmin.setText("User: " + user.name);
-
-                // Prikazivanje dugmadi i privilegija na osnovu korisničkog tipa
-                if (user.getIsAdmin() == 1) {
                     setAdminPrivileges();
-                } else if (user.getIsAdmin() == 2) {
-                    setSuperAdminPrivileges();
                 } else {
                     setUserPrivileges();
                 }
 
+
                 setLocationRelativeTo(null);
                 setVisible(true);
             } else {
-                dispose();  // Ako korisnik nije registrovan, zatvori DashboardForm
+                dispose();  // Ako nije prijavljen korisnik, zatvori dashboard
             }
+        } else {
+            // Ako nema registrovanih korisnika, pozivamo regform
+            RegistrationForm registrationForm = new RegistrationForm(this);
+            user = registrationForm.user;
+
+//            if (user != null) {
+//                lbAdmin.setText("User: " + user.name);
+//
+//                // Prikazivanje dugmadi i privilegija na osnovu korisničkog tipa
+//                if (user.getIsAdmin() == 1) {
+//                    setAdminPrivileges();
+//                } else if (user.getIsAdmin() == 2) {
+//                    setSuperAdminPrivileges();
+//                } else {
+//                    setUserPrivileges();
+//                }
+//
+//                setLocationRelativeTo(null);
+//                setVisible(true);
+//            } else {
+//                dispose();  // Ako korisnik nije registrovan, zatvori DashboardForm
+//            }
         }
-
-
-
 
         btnSearch.addActionListener(e -> performSearch());
         btnCompleteTask.addActionListener(e -> completeUserTask());
@@ -100,7 +97,7 @@ public class DashboardForm extends JFrame {
 
         btnViewUsers.addActionListener(e -> showAllUsers());
 
-        // Prilagoditi kod u "btnLogout" i kod ponovne prijave:
+
         btnLogout.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(DashboardForm.this,
                     "Da li ste sigurni da želite da se odjavite?",
@@ -108,8 +105,8 @@ public class DashboardForm extends JFrame {
             this.user = null;
 
             if (confirm == JOptionPane.YES_OPTION) {
-                resetDashboard(); // Resetovanje dugmadi i elemenata
-                setVisible(false); // Sakrij DashboardForm
+                resetDashboard();
+                setVisible(false);
 
                 // Ponovna prijava
                 LoginForm loginForm1 = new LoginForm(DashboardForm.this);
@@ -141,15 +138,13 @@ public class DashboardForm extends JFrame {
     }
 
     private void setAdminPrivileges() {
-        // Resetuj sve komponente
+
         btnSearch.setVisible(false);
         tfSearch.setVisible(false);
-
-        // Privilegije koje imaju admini
         btnViewUsers.setVisible(true);
         btnRegister.setVisible(true);
         btnAssignTask.setVisible(true);
-        btnCompleteTask.setVisible(false);  // Admini ne završavaju zadatke
+        btnCompleteTask.setVisible(false);
         lblTaskDescription.setVisible(false);
         btnShowAllTasks.setVisible(true);
         lbAdd.setVisible(true);
@@ -158,44 +153,35 @@ public class DashboardForm extends JFrame {
         lbShowT.setVisible(true);
         srLabelTask.setVisible(false);
 
-        // Admini mogu da vide korisnike, ali ne mogu da ih brišu
-        // Uklonite dugme za brisanje korisnika, jer to može biti samo za superadmina
-        // Brisanje korisnika je omogućeno samo za superadmina, ne za admina
     }
 
     private void setManagerPrivileges() {
-        // Resetuj sve nepotrebne komponente
+
         btnSearch.setVisible(true);
         tfSearch.setVisible(true);
-
-        // Manager ima sledeće privilegije:
-        btnViewUsers.setVisible(true);  // Može da vidi listu korisnika
-        btnRegister.setVisible(false); // Ne može da registruje nove korisnike
-        btnAssignTask.setVisible(false); // Ne može da dodeljuje zadatke
-        btnCompleteTask.setVisible(true); // Može da završi sopstvene zadatke
-        lblTaskDescription.setVisible(true); // Prikaz zadatka
-        btnShowAllTasks.setVisible(true); // Može da vidi sve zadatke
-        lbAdd.setVisible(false); // Sakrij nepotrebne label-e
+        btnViewUsers.setVisible(true);
+        btnRegister.setVisible(false);
+        btnAssignTask.setVisible(false);
+        btnCompleteTask.setVisible(true);
+        lblTaskDescription.setVisible(true);
+        btnShowAllTasks.setVisible(true);
+        lbAdd.setVisible(false);
         lbReg.setVisible(false);
         lbShow.setVisible(true);
         lbShowT.setVisible(true);
-        srLabelTask.setVisible(true); // Prikaz rezultata pretrage
-
-        showUserTask(); // Prikaži sopstvene zadatke
+        srLabelTask.setVisible(true);
+        showUserTask();
     }
 
 
 
     private void setSuperAdminPrivileges() {
-        // Resetuj sve komponente
         btnSearch.setVisible(true);
         tfSearch.setVisible(true);
-
-        // Superadmini imaju sve privilegije admina, plus dodatne privilegije
         btnViewUsers.setVisible(true);
         btnRegister.setVisible(true);
         btnAssignTask.setVisible(true);
-        btnCompleteTask.setVisible(false);  // Superadmini ne završavaju zadatke
+        btnCompleteTask.setVisible(false);
         lblTaskDescription.setVisible(false);
         btnShowAllTasks.setVisible(true);
         lbAdd.setVisible(true);
@@ -203,21 +189,16 @@ public class DashboardForm extends JFrame {
         lbShow.setVisible(true);
         lbShowT.setVisible(true);
         srLabelTask.setVisible(true);
-
-        // Superadmini mogu brisati korisnike
-        // Brisanje korisnika se omogućava samo za superadmina
     }
 
     private void setUserPrivileges() {
-        // Resetuj sve komponente
+
         btnSearch.setVisible(false);
         tfSearch.setVisible(false);
-
-        // Obični korisnici imaju minimalne privilegije
         btnViewUsers.setVisible(false);
         btnRegister.setVisible(false);
         btnAssignTask.setVisible(false);
-        btnCompleteTask.setVisible(true);  // Samo obični korisnici mogu završavati zadatke
+        btnCompleteTask.setVisible(true);
         lblTaskDescription.setVisible(true);
         btnShowAllTasks.setVisible(false);
         lbAdd.setVisible(false);
@@ -232,7 +213,7 @@ public class DashboardForm extends JFrame {
     }
 
 
-    // Metoda za resetovanje Dashboard-a pri odjavi
+    // Metoda za resetovanje Dashboarda pri odjavi
     private void resetDashboard() {
         btnViewUsers.setVisible(false);
         btnRegister.setVisible(false);
@@ -242,29 +223,23 @@ public class DashboardForm extends JFrame {
     }
 
     private void performSearch() {
-        String searchTerm = tfSearch.getText().toLowerCase().trim();  // Uzimamo tekst iz input polja
+        String searchTerm = tfSearch.getText().toLowerCase().trim();
 
-        // Proveravamo da li je unos prazan
         if (searchTerm.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Molimo vas da unesete bar jedan kriterijum za pretragu.", "Greška", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        final String DB_URL = "jdbc:mysql://localhost:3306/managment?serverTimeZone=UTC";
-        final String USERNAME = "root";
-        final String PASSWORD = "";
-
-        try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD)) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
             // SQL upit za pretragu tačnog imena korisnika ili opisa zadatka
             String sql = "SELECT t.id, t.description, t.completed, u.name AS user_name " +
                     "FROM tasks t " +
                     "JOIN users u ON t.user_id = u.id " +
-                    "WHERE u.name = ? OR t.description LIKE ?";  // Koristi "=" za tačno ime korisnika
+                    "WHERE u.name = ? OR t.description LIKE ?";
 
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                // Postavljamo parametre za pretragu
-                stmt.setString(1, searchTerm);  // Tačno ime korisnika
-                stmt.setString(2, "%" + searchTerm + "%");  // Opis zadatka, delimično pretraživanje
+                stmt.setString(1, searchTerm);
+                stmt.setString(2, "%" + searchTerm + "%");
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     StringBuilder results = new StringBuilder("Rezultati pretrage:\n\n");
@@ -345,12 +320,10 @@ public class DashboardForm extends JFrame {
                 String taskDescription = rs.getString("description");
                 lblTaskDescription.setText("Vaš zadatak: " + taskDescription); // Prikazivanje opisa zadatka
 
-                // Ako korisnik ima aktivan zadatak, dugme za završavanje zadatka treba da bude vidljivo
+
                 btnCompleteTask.setVisible(true);
             } else {
                 lblTaskDescription.setText("Nemate dodeljen zadatak."); // Ako nema dodeljen zadatak
-
-                // Ako korisnik nema zadatak, dugme za završavanje zadatka treba da bude sakriveno
                 btnCompleteTask.setVisible(false);
             }
 
@@ -361,11 +334,9 @@ public class DashboardForm extends JFrame {
         }
     }
     public void clearSession() {
-        this.user = null;  // Resetuj sve podatke koji su vezani za trenutnu sesiju
-        // Dodaj sve druge potrebne akcije za resetovanje sesije
+        this.user = null;
+
     }
-
-
 
     private void showAllUsers() {
         final String DB_URL = "jdbc:mysql://localhost:3306/managment?serverTimeZone=UTC";
@@ -374,9 +345,8 @@ public class DashboardForm extends JFrame {
 
         try (Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT id, name, email, phone, address FROM users")) {
+             ResultSet rs = stmt.executeQuery("SELECT id, name, email, phone, address, salary FROM users")) {
 
-            // Kreiramo StringBuilder za sve korisnike koje ćemo prikazati u JOptionPane
             StringBuilder userList = new StringBuilder("Users:\n\n");
             while (rs.next()) {
                 int userId = rs.getInt("id");
@@ -384,12 +354,14 @@ public class DashboardForm extends JFrame {
                 String userEmail = rs.getString("email");
                 String userPhone = rs.getString("phone");
                 String userAddress = rs.getString("address");
+                String salary = rs.getString("salary");
 
                 userList.append("ID: ").append(userId)
                         .append(", Name: ").append(userName)
                         .append(", Email: ").append(userEmail)
                         .append(", Phone: ").append(userPhone)
                         .append(", Address: ").append(userAddress)
+                        .append(", Salary: ").append(salary)
                         .append("\n");
             }
 
@@ -399,24 +371,23 @@ public class DashboardForm extends JFrame {
                 userString = "Nema korisnika u sistemu.";
             }
 
-            // Ako je superadmin, omogućavamo mu da obriše korisnike
+
             if (user.getIsAdmin() == 2) {
                 String userInput = JOptionPane.showInputDialog(this, userString + "\nUnesite ID korisnika kojeg želite da obrišete:");
 
-                // Ako korisnik nije uneo ID (pritisnuo Cancel ili ostavio prazno), izlazimo
                 if (userInput == null || userInput.trim().isEmpty()) {
                     return;
                 }
 
                 try {
                     int userIdToDelete = Integer.parseInt(userInput.trim()); // Pretvaramo uneseni tekst u broj
-                    // Pozivamo metodu za brisanje korisnika sa tim ID-om
+
                     deleteUser(userIdToDelete);
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(this, "Uneti ID nije validan broj!", "Greška", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-                // Ako korisnik nije superadmin, samo prikazujemo listu korisnika bez brisanja
+
                 JOptionPane.showMessageDialog(this, userString, "Lista korisnika", JOptionPane.INFORMATION_MESSAGE);
             }
 
@@ -429,7 +400,7 @@ public class DashboardForm extends JFrame {
 
     private void deleteUser(int userId) {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/managment?serverTimeZone=UTC", "root", "")) {
-            String sql = "DELETE FROM users WHERE id = ?"; // Brisanje korisnika na osnovu ID-a
+            String sql = "DELETE FROM users WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setInt(1, userId);
                 int rowsDeleted = stmt.executeUpdate();
@@ -449,23 +420,21 @@ public class DashboardForm extends JFrame {
 
     private void completeUserTask() {
         try {
-            // Uspostavi vezu sa bazom
+            // veza sa bazom
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/managment?serverTimeZone=UTC", "root", "");
 
-            // SQL upit za označavanje zadatka kao završen
+            // SQL upit
             String sql = "UPDATE tasks SET completed = true WHERE user_id = ? AND completed IS NULL";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, user.getId()); // Postavljamo ID korisnika da se završi njegov zadatak
 
-            // Izvršavamo upit
             int rowsUpdated = stmt.executeUpdate();
 
-            // Proveravamo da li je neki red ažuriran (tj. zadatak je pronađen i označen kao završen)
-            if (rowsUpdated > 0) {
-                JOptionPane.showMessageDialog(this, "Zadatak je uspešno završen.", "Uspešno", JOptionPane.INFORMATION_MESSAGE);
-                lblTaskDescription.setText("Nemate dodeljen zadatak."); // Brisanje prikaza zadatka nakon što je završen
 
-                // Sakrij dugme za završavanje zadatka jer je sada završen
+            if (rowsUpdated > 0) {
+                JOptionPane.showMessageDialog(this, "Zadatak je uspješno završen.", "Uspješno", JOptionPane.INFORMATION_MESSAGE);
+                lblTaskDescription.setText("Nemate dodijeljen zadatak.");
+
                 btnCompleteTask.setVisible(false);
             } else {
                 JOptionPane.showMessageDialog(this, "Nemate dodeljen zadatak ili je zadatak već završen.", "Greška", JOptionPane.ERROR_MESSAGE);
@@ -478,11 +447,7 @@ public class DashboardForm extends JFrame {
         }
     }
 
-
-
-
     private boolean connectToDatabase() {
-        // Ostatak koda za povezivanje na bazu
         return true;
     }
 
