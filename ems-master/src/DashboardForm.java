@@ -3,21 +3,21 @@ import java.awt.*;
 import java.sql.*;
 
 public class DashboardForm extends JFrame {
-    private JPanel dashboardPanel;
-    private JLabel lbAdmin;
-    private JButton btnRegister;
-    private JButton btnViewUsers;
-    private JButton btnLogout;
-    private JButton btnAssignTask;
-    private JLabel lblTaskDescription; // Prikazivanje zadatka
-    private JButton btnCompleteTask; // Dugme za završavanje zadatka
-    private JButton btnShowAllTasks; // Dugme za prikaz svih zadataka
+    private JPanel dashboardPanel; //glavni prozor
+    private JLabel lbAdmin; // polje gdje pise ime logovanog korisnika
+    private JButton btnRegister; //dugme za registraciju
+    private JButton btnViewUsers; //  dugme za pregled svih korisnika
+    private JButton btnLogout; // dugme za logout
+    private JButton btnAssignTask; // dugme za dodjelu taskova
+    private JLabel lblTaskDescription; // polje za prikazivanje zadatka
+    private JButton btnCompleteTask; // dugme za završavanje zadatka
+    private JButton btnShowAllTasks; // dugme za prikaz svih zadataka
     private JLabel lbReg;
     private JLabel lbShow;
     private JLabel lbAdd;
     private JLabel lbShowT;
-    private JTextField tfSearch; // Polje za unos (ime korisnika + zadatak)
-    private JButton btnSearch;   // Dugme za pretragu
+    private JTextField tfSearch; // Polje za pretragu taska
+    private JButton btnSearch;   // dugme za pretragu taska
     private JLabel srLabelTask;
 
 
@@ -32,7 +32,7 @@ public class DashboardForm extends JFrame {
 
         boolean hasRegisteredUsers = connectToDatabase();
 
-        // Ako postoje registrovani korisnici, poziva sele logiforma
+        // Ako postoje registrovani korisnici, poziva see logiforma
         if (hasRegisteredUsers) {
 
             LoginForm loginForm = new LoginForm(this);

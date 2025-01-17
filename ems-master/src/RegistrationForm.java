@@ -113,7 +113,7 @@ public class RegistrationForm extends JDialog{
                             rs.getString("email"),
                             rs.getString("phone"),
                             rs.getString("address"),
-                            isAdminInt // Koristi int vrednost za isAdmin
+                            isAdminInt
                     );
                 }
             }
